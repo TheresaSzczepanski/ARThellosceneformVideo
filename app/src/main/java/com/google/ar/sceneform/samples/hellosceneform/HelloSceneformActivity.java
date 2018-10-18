@@ -35,6 +35,8 @@ import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 
+import java.io.File;
+
 /**
  * This is an example activity that uses the Sceneform UX package to make common AR tasks easier.
  */
@@ -58,6 +60,9 @@ public class HelloSceneformActivity extends AppCompatActivity {
 
     setContentView(R.layout.activity_ux);
     arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.ux_fragment);
+
+    shareScreen();
+
 
     // When you build a Renderable, Sceneform loads its resources in the background while returning
     // a CompletableFuture. Call thenAccept(), handle(), or check isDone() before calling get().
@@ -92,6 +97,8 @@ public class HelloSceneformActivity extends AppCompatActivity {
           andy.setParent(anchorNode);
           andy.setRenderable(andyRenderable);
           andy.select();
+
+
         });
   }
 
@@ -123,4 +130,29 @@ public class HelloSceneformActivity extends AppCompatActivity {
     }
     return true;
   }
+
+    private void shareScreen() {
+        try {
+
+            File cacheDir = new File(
+                    android.os.Environment.getExternalStorageDirectory(),
+                    "devdeeds");
+
+            if (!cacheDir.exists()) {
+                cacheDir.mkdirs();
+            }
+
+            String path = new File(
+                    android.os.Environment.getExternalStorageDirectory(),
+                    "photos") + "/screenshot.jpg";
+
+            Utils.savePic(Utils.takeScreenShot(this), path);
+
+            Toast.makeText(getApplicationContext(), "Screenshot Saved", Toast.LENGTH_SHORT).show();
+
+
+        } catch (NullPointerException ignored) {
+            ignored.printStackTrace();
+        }
+    }
 }
