@@ -19,6 +19,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.hardware.display.VirtualDisplay;
 import android.net.Uri;
 import android.os.Build;
@@ -27,6 +28,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -212,12 +214,17 @@ public class HelloSceneformActivity extends AppCompatActivity {
 
     public void onToggleScreenShare(View view) {
         if (((ToggleButton) view).isChecked()) {
+            mToggleButton.setBackgroundColor(Color.TRANSPARENT);
+            mToggleButton.setText("   ");
             shareScreen();
         } else {
             mMediaRecorder.stop();
             mMediaRecorder.reset();
             Log.v(TAG, "Recording Stopped");
             stopScreenSharing();
+            mToggleButton.setText("On");
+            mToggleButton.setVisibility(View.VISIBLE);
+            mToggleButton.setBackgroundColor(getResources().getColor(R.color.lightBlueTheme));
         }
     }
 
@@ -270,7 +277,7 @@ public class HelloSceneformActivity extends AppCompatActivity {
     }
 
     public String getFilePath() {
-        final String directory = Environment.getExternalStorageDirectory() + File.separator + "Recordings";
+        final String directory = Environment.getExternalStorageDirectory() + File.separator + "Download";
         if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             Toast.makeText(this, "Failed to get External Storage", Toast.LENGTH_SHORT).show();
             return null;
