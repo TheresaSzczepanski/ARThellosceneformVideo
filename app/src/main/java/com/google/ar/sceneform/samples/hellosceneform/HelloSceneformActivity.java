@@ -222,7 +222,7 @@ public class HelloSceneformActivity extends AppCompatActivity {
             mMediaRecorder.reset();
             Log.v(TAG, "Recording Stopped");
             stopScreenSharing();
-            mToggleButton.setText("On");
+            mToggleButton.setText("Off");
             mToggleButton.setVisibility(View.VISIBLE);
             mToggleButton.setBackgroundColor(getResources().getColor(R.color.lightBlueTheme));
         }
