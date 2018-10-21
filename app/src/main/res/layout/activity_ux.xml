@@ -24,11 +24,23 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:padding="10dp"
-        android:text="Take ScreenShot And Save" />
+  <TextView
+      android:id="@+id/textView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentTop="true"
+      android:layout_centerHorizontal="true"
+      android:layout_marginTop="10dp"
+      android:text="Recording Status: "
+      android:textAppearance="?android:attr/textAppearanceLarge" />
+
+  <ToggleButton
+      android:id="@+id/toggle"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/textView"
+      android:layout_centerHorizontal="true"
+      android:layout_marginTop="5dp"
+      android:text="Start" />
 
 </FrameLayout>

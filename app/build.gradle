@@ -15,13 +15,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     defaultConfig {
         applicationId "com.google.ar.sceneform.samples.hellosceneform"
 
         // 24 is the minimum since ARCore only works with 24 and higher.
-        minSdkVersion 24
-        targetSdkVersion 27
+        minSdkVersion 25
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         ndk {
