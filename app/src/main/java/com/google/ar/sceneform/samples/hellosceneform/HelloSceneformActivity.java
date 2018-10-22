@@ -314,7 +314,7 @@ public class HelloSceneformActivity extends AppCompatActivity {
                 mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
                 mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
                 mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-                mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+                mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.HEVC);
                 mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
                 mMediaRecorder.setVideoEncodingBitRate(DISPLAY_WIDTH * DISPLAY_HEIGHT);
                 mMediaRecorder.setVideoFrameRate(30);
