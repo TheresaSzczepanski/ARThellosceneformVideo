@@ -311,12 +311,12 @@ public class HelloSceneformActivity extends AppCompatActivity {
 
             if (mMediaRecorder == null) {
                 mMediaRecorder = new MediaRecorder();
+                mMediaRecorder.setVideoEncodingBitRate(10000000);
                 mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
                 mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
                 mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
                 mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.HEVC);
                 mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-                mMediaRecorder.setVideoEncodingBitRate(DISPLAY_WIDTH * DISPLAY_HEIGHT);
                 mMediaRecorder.setVideoFrameRate(30);
                 mMediaRecorder.setVideoSize(DISPLAY_WIDTH, DISPLAY_HEIGHT);
                 mMediaRecorder.setOutputFile(getFilePath());
