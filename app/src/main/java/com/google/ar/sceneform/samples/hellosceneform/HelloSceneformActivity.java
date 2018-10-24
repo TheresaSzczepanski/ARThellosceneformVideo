@@ -104,6 +104,7 @@ public class HelloSceneformActivity extends AppCompatActivity {
         DISPLAY_WIDTH = metrics.widthPixels;
 
         mToggleButton = (ToggleButton) findViewById(R.id.toggle);
+        mToggleButton.setText("Click to record!");
         mToggleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -232,7 +233,7 @@ public class HelloSceneformActivity extends AppCompatActivity {
             mMediaRecorder.reset();
             Log.v(TAG, "Recording Stopped");
             stopScreenSharing();
-            mToggleButton.setText("Off");
+            mToggleButton.setText("Click to record!");
             mToggleButton.setVisibility(View.VISIBLE);
             mToggleButton.setBackgroundColor(getResources().getColor(R.color.lightBlueTheme));
         }
@@ -290,7 +291,7 @@ public class HelloSceneformActivity extends AppCompatActivity {
 
     public String getFilePath() {
         // DCIM/Camera
-        final String directory = Environment.getExternalStorageDirectory() + File.separator + "Downloads";
+        final String directory = Environment.getExternalStorageDirectory() + File.separator + "Recordings";
         if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             Toast.makeText(this, "Failed to get External Storage", Toast.LENGTH_SHORT).show();
             return null;

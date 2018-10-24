@@ -19,7 +19,6 @@
     android:layout_height="match_parent"
     tools:context=".HelloSceneformActivity">
 
-
   <fragment
       android:id="@+id/ux_fragment"
       android:name="com.google.ar.sceneform.ux.ArFragment"
@@ -28,11 +27,11 @@
 
   <ToggleButton
       android:id="@+id/toggle"
-      android:layout_width="80dp"
+      android:layout_width="150dp"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal|bottom"
-      android:background="#3F79B2"
       android:layout_marginBottom="20dp"
-      android:text="Start" />
+      android:background="#3F79B2"
+      android:text="@string/button_name" />
 
 </FrameLayout>

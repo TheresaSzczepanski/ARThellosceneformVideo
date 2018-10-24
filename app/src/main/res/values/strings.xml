@@ -16,4 +16,5 @@
 -->
 <resources>
     <string name="app_name">Hello Sceneform</string>
+    <string name="button_name">Click to record!</string>
 </resources>
