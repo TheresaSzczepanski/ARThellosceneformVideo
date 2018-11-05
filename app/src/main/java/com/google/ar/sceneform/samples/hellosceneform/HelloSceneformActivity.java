@@ -60,6 +60,16 @@ import java.util.Date;
 /**
  * This is an example activity that uses the Sceneform UX package to make common AR tasks easier.
  */
+
+/* 
+To update andy, find "andy.sfb" and update it with the new file name from the assets class.
+
+To create a new renderable, download the Sceneform beta plugin (exit android studio to the open new project menu and go to plugins, repositories, and search for it.
+Once the plugin is installed, you can download an asset from poly.google.com. Find that asset and drag it into the sampledata folder under in the file location.
+Find sampledata in android studio, and right click on the file that you want to make an asset of. Click "Import something sceneform" and it will add it to the assets folder.
+You can now replace "andy.sfb" with your new filename!
+*/
+
 public class HelloSceneformActivity extends AppCompatActivity {
     private static final String TAG = HelloSceneformActivity.class.getSimpleName();
     private static final double MIN_OPENGL_VERSION = 3.0;
