@@ -65,7 +65,10 @@ public class HelloSceneformActivity extends AppCompatActivity {
     private static final double MIN_OPENGL_VERSION = 3.0;
 
     private ArFragment arFragment;
-    private ModelRenderable andyRenderable;
+    private ModelRenderable searchingRenderable;
+    private ModelRenderable madnessRenderable;
+    private ModelRenderable[] renderableList = new ModelRenderable[7];
+
 
     private static final int PERMISSION_CODE = 1;
     private int mScreenDensity;
@@ -80,6 +83,8 @@ public class HelloSceneformActivity extends AppCompatActivity {
     private Surface getSurface;
 
     private int counter = 0;
+    private String[] fileStringList = new String[7];
+
 
     @Override
     @SuppressWarnings({"AndroidApiChecker", "FutureReturnValueIgnored"})
@@ -92,6 +97,28 @@ public class HelloSceneformActivity extends AppCompatActivity {
         if (!checkIsSupportedDeviceOrFinish(this)) {
             return;
         }
+
+        /*
+        Word order:
+        Searching
+        Madness
+        Sight
+        Lose your mind
+        Shadows
+        Sanity
+        Find
+
+         */
+
+        fileStringList[0] = "Searching.sfb";
+        fileStringList[1] = "Madness.sfb";
+
+        /*
+        fileStringList[2] = "Sight.sfb";
+        fileStringList[3] = "LoseYourMind.sfb";
+        fileStringList[4] = "Shadows.sfb";
+        fileStringList[5] = "Find.sfb";
+        */
 
         setContentView(R.layout.activity_ux);
         arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.ux_fragment);
@@ -116,18 +143,35 @@ public class HelloSceneformActivity extends AppCompatActivity {
 
         mMediaProjectionCallback = new MediaProjectionCallback();
 
-
+        // Could just make a list of renderables
 
 
 
         // When you build a Renderable, Sceneform loads its resources in the background while returning
         // a CompletableFuture. Call thenAccept(), handle(), or check isDone() before calling get().
+
+            ModelRenderable.builder()
+                    .setSource(this, Uri.parse("Searching.sfb"))
+                    // In order to use a different object, check this source
+                    // .setSource(this, R.raw.andy) is the other option for setting the image source.
+                    .build()
+                    .thenAccept(renderable -> searchingRenderable = renderable)
+                    .exceptionally(
+                            throwable -> {
+                                Toast toast =
+                                        Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
+                                toast.setGravity(Gravity.CENTER, 0, 0);
+                                toast.show();
+                                return null;
+                            });
+
+
         ModelRenderable.builder()
-                .setSource(this, Uri.parse("andy.sfb"))
-                //In order to use a different object, check this source
+                .setSource(this, Uri.parse("Madness.sfb"))
+                // In order to use a different object, check this source
                 // .setSource(this, R.raw.andy) is the other option for setting the image source.
                 .build()
-                .thenAccept(renderable -> andyRenderable = renderable)
+                .thenAccept(renderable -> madnessRenderable = renderable)
                 .exceptionally(
                         throwable -> {
                             Toast toast =
@@ -137,9 +181,12 @@ public class HelloSceneformActivity extends AppCompatActivity {
                             return null;
                         });
 
+        renderableList[0] = searchingRenderable;
+        renderableList[1] = madnessRenderable;
+
         arFragment.setOnTapArPlaneListener(
                 (HitResult hitResult, Plane plane, MotionEvent motionEvent) -> {
-                    if (andyRenderable == null) {
+                    if (searchingRenderable == null) {
                         return;
                     }
 
@@ -151,8 +198,9 @@ public class HelloSceneformActivity extends AppCompatActivity {
                     // Create the transformable andy and add it to the anchor.
                     TransformableNode andy = new TransformableNode(arFragment.getTransformationSystem());
                     andy.setParent(anchorNode);
-                    andy.setRenderable(andyRenderable);
+                    andy.setRenderable(searchingRenderable);
                     andy.select();
+                    counter++;
 
 
                 });
@@ -227,7 +275,6 @@ public class HelloSceneformActivity extends AppCompatActivity {
             mToggleButton.setBackgroundColor(Color.TRANSPARENT);
             mToggleButton.setText("   ");
             shareScreen();
-            counter = counter + 1;
         } else {
             //mMediaRecorder.stop();
             mMediaRecorder.reset();
