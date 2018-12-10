@@ -20,6 +20,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.ColorSpace;
 import android.hardware.display.VirtualDisplay;
 import android.net.Uri;
 import android.os.Build;
@@ -39,6 +40,8 @@ import com.google.ar.core.HitResult;
 import com.google.ar.core.Plane;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.rendering.ModelRenderable;
+import com.google.ar.sceneform.rendering.Renderable;
+import com.google.ar.sceneform.rendering.Texture;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 import android.media.MediaRecorder;
@@ -56,6 +59,8 @@ import android.widget.ToggleButton;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 /**
  * This is an example activity that uses the Sceneform UX package to make common AR tasks easier.
@@ -67,6 +72,8 @@ public class HelloSceneformActivity extends AppCompatActivity {
     private ArFragment arFragment;
     private ModelRenderable searchingRenderable;
     private ModelRenderable madnessRenderable;
+    private ModelRenderable sightRenderable;
+    private ModelRenderable loseYourMindRenderable;
     private ModelRenderable[] renderableList = new ModelRenderable[7];
 
 
@@ -82,7 +89,7 @@ public class HelloSceneformActivity extends AppCompatActivity {
     private MediaRecorder mMediaRecorder;
     private Surface getSurface;
 
-    private int counter = 0;
+    private int counter = 1;
     private String[] fileStringList = new String[7];
 
 
@@ -98,17 +105,7 @@ public class HelloSceneformActivity extends AppCompatActivity {
             return;
         }
 
-        /*
-        Word order:
-        Searching
-        Madness
-        Sight
-        Lose your mind
-        Shadows
-        Sanity
-        Find
 
-         */
 
         fileStringList[0] = "Searching.sfb";
         fileStringList[1] = "Madness.sfb";
@@ -150,39 +147,57 @@ public class HelloSceneformActivity extends AppCompatActivity {
         // When you build a Renderable, Sceneform loads its resources in the background while returning
         // a CompletableFuture. Call thenAccept(), handle(), or check isDone() before calling get().
 
-            ModelRenderable.builder()
-                    .setSource(this, Uri.parse("Searching.sfb"))
-                    // In order to use a different object, check this source
-                    // .setSource(this, R.raw.andy) is the other option for setting the image source.
-                    .build()
-                    .thenAccept(renderable -> searchingRenderable = renderable)
-                    .exceptionally(
-                            throwable -> {
-                                Toast toast =
-                                        Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
-                                toast.setGravity(Gravity.CENTER, 0, 0);
-                                toast.show();
+
+
+        CompletableFuture<ModelRenderable> searchingStage =
+                ModelRenderable.builder().setSource(this, Uri.parse("Searching.sfb")).build();
+        CompletableFuture<ModelRenderable> madnessStage =
+                ModelRenderable.builder().setSource(this, Uri.parse("Madness.sfb")).build();
+        CompletableFuture<ModelRenderable> sightStage =
+                ModelRenderable.builder().setSource(this, Uri.parse("Sight.sfb")).build();
+        CompletableFuture<ModelRenderable> loseYourMindStage =
+                ModelRenderable.builder().setSource(this, Uri.parse("LoseYourMind.sfb")).build();
+
+        /*
+        Word order:
+        Searching
+        Madness
+        Sight
+        Lose your mind
+        Shadows
+        Sanity
+        Find
+
+         */
+
+        CompletableFuture.allOf(
+                searchingStage,
+                madnessStage)
+                .handle(
+                        (notUsed, throwable) -> {
+                            // When you build a Renderable, Sceneform loads its resources in the background while
+                            // returning a CompletableFuture. Call handle(), thenAccept(), or check isDone()
+                            // before calling get().
+
+                            if (throwable != null) {
                                 return null;
-                            });
+                            }
 
+                            try {
+                                searchingRenderable = searchingStage.get();
+                                madnessRenderable = madnessStage.get();
+                                sightRenderable = sightStage.get();
+                                loseYourMindRenderable = loseYourMindStage.get();
 
-        ModelRenderable.builder()
-                .setSource(this, Uri.parse("Madness.sfb"))
-                // In order to use a different object, check this source
-                // .setSource(this, R.raw.andy) is the other option for setting the image source.
-                .build()
-                .thenAccept(renderable -> madnessRenderable = renderable)
-                .exceptionally(
-                        throwable -> {
-                            Toast toast =
-                                    Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
-                            toast.setGravity(Gravity.CENTER, 0, 0);
-                            toast.show();
+                                // Everything finished loading successfully.
+
+                            } catch (InterruptedException | ExecutionException ex) {
+                            }
+
                             return null;
                         });
 
-        renderableList[0] = searchingRenderable;
-        renderableList[1] = madnessRenderable;
+
 
         arFragment.setOnTapArPlaneListener(
                 (HitResult hitResult, Plane plane, MotionEvent motionEvent) -> {
@@ -191,14 +206,29 @@ public class HelloSceneformActivity extends AppCompatActivity {
                     }
 
                     // Create the Anchor.
+
                     Anchor anchor = hitResult.createAnchor();
                     AnchorNode anchorNode = new AnchorNode(anchor);
                     anchorNode.setParent(arFragment.getArSceneView().getScene());
 
                     // Create the transformable andy and add it to the anchor.
+
+                    // Poor name for a variable, honestly.
                     TransformableNode andy = new TransformableNode(arFragment.getTransformationSystem());
                     andy.setParent(anchorNode);
-                    andy.setRenderable(searchingRenderable);
+                    if(counter == 0) {
+                        andy.setRenderable(searchingRenderable);
+                    }
+                    else if(counter == 1){
+                        andy.setRenderable(madnessRenderable);
+                    }
+                    else if(counter == 2){
+                        andy.setRenderable(sightRenderable);
+                    }
+                    else{
+                        andy.setRenderable(loseYourMindRenderable);
+                        counter = -1;
+                    }
                     andy.select();
                     counter++;
 

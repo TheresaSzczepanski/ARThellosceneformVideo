@@ -89,3 +89,18 @@ sceneform.asset('sampledata/models/Madness.obj',
         'default',
         'sampledata/models/Madness.sfa',
         'src/main/assets/Madness')
+
+sceneform.asset('sampledata/models/ARTDanceInspiringFind2.obj',
+        'default',
+        'sampledata/models/ARTDanceInspiringFind2.sfa',
+        'src/main/assets/ARTDanceInspiringFind2')
+
+sceneform.asset('sampledata/models/Sight.obj',
+        'default',
+        'sampledata/models/Sight.sfa',
+        'src/main/assets/Sight')
+
+sceneform.asset('sampledata/models/LoseYourMind.obj',
+        'default',
+        'sampledata/models/LoseYourMind.sfa',
+        'src/main/assets/LoseYourMind')
