@@ -74,7 +74,10 @@ public class HelloSceneformActivity extends AppCompatActivity {
     private ModelRenderable madnessRenderable;
     private ModelRenderable sightRenderable;
     private ModelRenderable loseYourMindRenderable;
-    private ModelRenderable[] renderableList = new ModelRenderable[7];
+    private ModelRenderable sanityRenderable;
+    private ModelRenderable findRenderable;
+    private ModelRenderable shadowsRenderable;
+    private ModelRenderable[] modelRenderableList = new ModelRenderable[6];
 
 
     private static final int PERMISSION_CODE = 1;
@@ -89,9 +92,7 @@ public class HelloSceneformActivity extends AppCompatActivity {
     private MediaRecorder mMediaRecorder;
     private Surface getSurface;
 
-    private int counter = 1;
-    private String[] fileStringList = new String[7];
-
+    private int counter = 0;
 
     @Override
     @SuppressWarnings({"AndroidApiChecker", "FutureReturnValueIgnored"})
@@ -105,10 +106,6 @@ public class HelloSceneformActivity extends AppCompatActivity {
             return;
         }
 
-
-
-        fileStringList[0] = "Searching.sfb";
-        fileStringList[1] = "Madness.sfb";
 
         /*
         fileStringList[2] = "Sight.sfb";
@@ -150,29 +147,24 @@ public class HelloSceneformActivity extends AppCompatActivity {
 
 
         CompletableFuture<ModelRenderable> searchingStage =
-                ModelRenderable.builder().setSource(this, Uri.parse("Searching.sfb")).build();
+                ModelRenderable.builder().setSource(this, Uri.parse("ARTDanceInspiringSearching2.sfb")).build();
+        CompletableFuture<ModelRenderable> sanityStage =
+                ModelRenderable.builder().setSource(this, Uri.parse("ARTDanceInspiringSanity2.sfb")).build();
         CompletableFuture<ModelRenderable> madnessStage =
-                ModelRenderable.builder().setSource(this, Uri.parse("Madness.sfb")).build();
-        CompletableFuture<ModelRenderable> sightStage =
-                ModelRenderable.builder().setSource(this, Uri.parse("Sight.sfb")).build();
+                ModelRenderable.builder().setSource(this, Uri.parse("ARTDanceInspiringMadness2.sfb")).build();
+        CompletableFuture<ModelRenderable> findStage =
+                ModelRenderable.builder().setSource(this, Uri.parse("ARTDanceInspiringFind2.sfb")).build();
         CompletableFuture<ModelRenderable> loseYourMindStage =
-                ModelRenderable.builder().setSource(this, Uri.parse("LoseYourMind.sfb")).build();
-
-        /*
-        Word order:
-        Searching
-        Madness
-        Sight
-        Lose your mind
-        Shadows
-        Sanity
-        Find
-
-         */
+                ModelRenderable.builder().setSource(this, Uri.parse("ARTDanceInspiringLoseYourMind2.sfb")).build();
+        CompletableFuture<ModelRenderable> sightStage =
+                ModelRenderable.builder().setSource(this, Uri.parse("ARTDanceInspiringSight2.sfb")).build();
+        CompletableFuture<ModelRenderable> shadowStage =
+                ModelRenderable.builder().setSource(this, Uri.parse("ARTDanceInspiringShadows2.sfb")).build();
+        //CompletableFuture<ModelRenderable> sightStage =
+               // ModelRenderable.builder().setSource(this, Uri.parse("ARTDanceInspiringSight2.sfb")).build();
 
         CompletableFuture.allOf(
-                searchingStage,
-                madnessStage)
+                searchingStage, sanityStage, madnessStage, findStage, loseYourMindStage, sightStage, shadowStage)
                 .handle(
                         (notUsed, throwable) -> {
                             // When you build a Renderable, Sceneform loads its resources in the background while
@@ -185,10 +177,15 @@ public class HelloSceneformActivity extends AppCompatActivity {
 
                             try {
                                 searchingRenderable = searchingStage.get();
+                                sanityRenderable = sanityStage.get();
                                 madnessRenderable = madnessStage.get();
-                                sightRenderable = sightStage.get();
+                                findRenderable = findStage.get();
                                 loseYourMindRenderable = loseYourMindStage.get();
+                                sightRenderable = sightStage.get();
+                                shadowsRenderable = shadowStage.get();
 
+
+                                //   sightRenderable = sightStage.get();
                                 // Everything finished loading successfully.
 
                             } catch (InterruptedException | ExecutionException ex) {
@@ -201,9 +198,9 @@ public class HelloSceneformActivity extends AppCompatActivity {
 
         arFragment.setOnTapArPlaneListener(
                 (HitResult hitResult, Plane plane, MotionEvent motionEvent) -> {
-                    if (searchingRenderable == null) {
-                        return;
-                    }
+                    //if (searchingRenderable == null || madnessRenderable == null || sightRenderable == null || loseYourMindRenderable == null) {
+                      //  return;
+                    //}
 
                     // Create the Anchor.
 
@@ -216,23 +213,44 @@ public class HelloSceneformActivity extends AppCompatActivity {
                     // Poor name for a variable, honestly.
                     TransformableNode andy = new TransformableNode(arFragment.getTransformationSystem());
                     andy.setParent(anchorNode);
-                    if(counter == 0) {
-                        andy.setRenderable(searchingRenderable);
+
+
+                    modelRenderableList[0] = searchingRenderable;
+                    modelRenderableList[1] = madnessRenderable;
+                    modelRenderableList[2] = sightRenderable;
+                    modelRenderableList[3] = loseYourMindRenderable;
+                    modelRenderableList[4] = shadowsRenderable;
+                    modelRenderableList[5] = sanityRenderable;
+
+
+                    if(counter == 6){
+                        counter = 0;
+                    }
+
+                    if(counter == 0){
+                        andy.setRenderable(modelRenderableList[0]);
                     }
                     else if(counter == 1){
-                        andy.setRenderable(madnessRenderable);
+                        andy.setRenderable(modelRenderableList[1]);
                     }
                     else if(counter == 2){
-                        andy.setRenderable(sightRenderable);
+                        andy.setRenderable(modelRenderableList[2]);
+
                     }
-                    else{
-                        andy.setRenderable(loseYourMindRenderable);
-                        counter = -1;
+                    else if(counter == 3){
+                        andy.setRenderable(modelRenderableList[3]);
+
                     }
+                    else if(counter == 4){
+                        andy.setRenderable(modelRenderableList[4]);
+                    }
+                    else if(counter == 5){
+                        andy.setRenderable(modelRenderableList[5]);
+
+                    }
+
                     andy.select();
-                    counter++;
-
-
+                    counter = counter + 1;
                 });
     }
 
@@ -414,7 +432,7 @@ public class HelloSceneformActivity extends AppCompatActivity {
             mMediaRecorder.setVideoFrameRate(30);
             mMediaRecorder.setOutputFile(getFilePath());
             mMediaRecorder.setVideoEncodingBitRate(10000000);
-            
+
             //mMediaRecorder.setOutputFile(getFilePath());
         }
     }
